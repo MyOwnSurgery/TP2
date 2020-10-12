@@ -104,19 +104,26 @@ class Server(object):
                 client.close()
                 self.clients.remove(client)
                 return
-            print(str(message))
+
             if SHUTDOWN_MESSAGE.lower() == message.message.lower():
                 self.exit()
                 return
             self.check(message)
-            if self.first_client.last_message is None:
+            if self.first_client.name == message.username:
                 self.first_client.last_message = message.message
             else:
                 self.second_client.last_message = message.message
-                self.decide()
+
+            print(str(self.timetable))
+            print(str(self.first_client.name))
+            print(str(self.first_client.last_message))
+            print(str(self.second_client.name))
+            print(str(self.second_client.last_message))
+
             self.broadcast(message)
             self.count += 1
             if self.count == 2:
+                self.decide()
                 if self.day != 5:
                     self.start_new_day()
                 else:
